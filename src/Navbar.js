@@ -1,15 +1,19 @@
 import React from 'react';
+import styles from './styles/navbar.module.css';
+import { useUser } from './UserContext';
 
-function Navbar({ walletBalance, onLogout, onAddMoney }) {
+function Navbar({ walletBalance, mobile, onLogout, onAddMoney }) {
+
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
-        <span className="wallet-balance">Wallet: ₹{walletBalance}</span>
-        <button className="add-money-btn" onClick={onAddMoney}>Add Money</button>
+    <nav className={styles.navbar}>
+      <div className={styles.navbarLeft}>
+       
+        <span className={styles.walletBalance}>Wallet: ₹{walletBalance}</span>
+        <button className={styles.addMoneyBtn} onClick={onAddMoney}>💰</button>
       </div>
-      <div className="navbar-right">
-        <span className="profile-symbol">👤</span>
-        <button className="logout-btn" onClick={onLogout}>Logout</button>
+      <div className={styles.navbarRight}>
+        {/* <span className={styles.profileSymbol}>👤</span> */}
+        <button className={styles.logoutBtn} onClick={onLogout}>🚪</button>
       </div>
     </nav>
   );

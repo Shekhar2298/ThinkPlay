@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from './UserContext';
 import io from 'socket.io-client';
+import styles from './styles/mathquiz.module.css';
 
 const MathQuiz = () => {
   const { state } = useUser();
   const { user } = state;
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [correctAnswer, setCorrectAnswer] = useState(0);
   const [score, setScore] = useState(0);
   const [questionCount, setQuestionCount] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(10); // Total questions in the quiz
@@ -155,7 +155,7 @@ const MathQuiz = () => {
   const entryFees = [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
 
   return (
-    <div className="math-quiz">
+    <div className={styles.mathQuiz}>
       {!gameStarted && !waitingForMatch ? (
         <div>
           <h3>Math Quiz Challenge</h3>

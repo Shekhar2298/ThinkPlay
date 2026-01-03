@@ -42,8 +42,11 @@ function Dashboard() {
   return (
     <div className="App">
       <Navbar walletBalance={wallet_balance} onLogout={handleLogout} onAddMoney={handleAddMoney} />
+      <div className="user-info">
+        <span>HI, {user?.mobile}</span>
+      </div>
       <div className="dashboard">
-        <h2>Welcome to the Dashboard, {user?.mobile}!</h2>
+      
         <p>Start your math quiz game here.</p>
         <MathQuiz />
       </div>

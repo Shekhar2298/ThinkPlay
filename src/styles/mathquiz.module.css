@@ -1,0 +1,163 @@
+.mathQuiz {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.mathQuiz h3 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.math-quiz p {
+  color: #555;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.math-quiz select {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.math-quiz select:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  transform: scale(1.02);
+}
+
+.math-quiz select:hover {
+  border-color: #764ba2;
+  background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+}
+
+.math-quiz select::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #667eea;
+  pointer-events: none;
+  font-size: 0.8rem;
+}
+
+.math-quiz option {
+  padding: 10px;
+  background: #fff;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.math-quiz option:hover {
+  background: #667eea;
+  color: #fff;
+}
+
+.math-quiz button {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.math-quiz button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.math-quiz input {
+  display: block;
+  margin: 20px auto;
+  padding: 12px;
+  font-size: 1.1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  transition: border-color 0.3s ease;
+}
+
+.math-quiz input:focus {
+  border-color: #667eea;
+  outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mathQuiz {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .mathQuiz h3 {
+    font-size: 1.5rem;
+  }
+
+  .mathQuiz p {
+    font-size: 1rem;
+  }
+
+  .mathQuiz button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .mathQuiz input {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mathQuiz {
+    padding: 10px;
+  }
+
+  .mathQuiz h3 {
+    font-size: 1.3rem;
+  }
+
+  .mathQuiz p {
+    font-size: 0.9rem;
+  }
+
+  .mathQuiz button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .mathQuiz input {
+    max-width: 200px;
+    padding: 10px;
+  }
+}
