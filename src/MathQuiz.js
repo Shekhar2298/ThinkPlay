@@ -186,6 +186,9 @@ const MathQuiz = () => {
           <h3>Question {questionCount + 1} / {totalQuestions}</h3>
           <p>Score: {score}</p>
           <p>Total Time Left: {totalTimeLeft}s</p>
+          <svg className={styles.spinner} width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" stroke="#667eea" strokeWidth="10" fill="none" strokeOpacity={totalTimeLeft / 30} />
+          </svg>
           <p>{question}</p>
           <input
             type="number"

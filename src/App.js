@@ -7,6 +7,7 @@ import Navbar from './Navbar';
 import AddMoney from './AddMoney';
 import PaymentSuccess from './PaymentSuccess';
 import MathQuiz from './MathQuiz';
+import Footer from './Footer';
 import './App.css';
 
 function Dashboard() {
