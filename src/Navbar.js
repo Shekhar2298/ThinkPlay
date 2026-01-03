@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './styles/navbar.module.css';
-import { useUser } from './UserContext';
 
 function Navbar({ walletBalance, mobile, onLogout, onAddMoney }) {
 

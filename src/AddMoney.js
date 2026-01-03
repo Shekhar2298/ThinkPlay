@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useUser } from './UserContext';
+import { useAuth } from './AuthContext';
+import { useWallet } from './WalletContext';
 import { useNavigate } from 'react-router-dom';
 import './AddMoney.css';
 
 function AddMoney({ onClose }) {
-  const { state, dispatch } = useUser();
-  const { user, token } = state;
+  const { authState, authDispatch } = useAuth();
+  const { walletDispatch } = useWallet();
+  const { user, token } = authState;
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -100,8 +102,8 @@ function AddMoney({ onClose }) {
 
           if (userResponse.ok) {
             const userData = await userResponse.json();
-            dispatch({ type: 'SET_USER', payload: userData.user });
-            dispatch({ type: 'SET_WALLET_BALANCE', payload: userData.user.wallet_balance });
+            authDispatch({ type: 'SET_USER', payload: userData.user });
+            walletDispatch({ type: 'SET_WALLET_BALANCE', payload: userData.user.wallet_balance });
           }
         } catch (error) {
           console.error('Error fetching updated user data:', error);

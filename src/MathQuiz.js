@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useUser } from './UserContext';
+import { useAuth } from './AuthContext';
+import { useWallet } from './WalletContext';
 import io from 'socket.io-client';
 import styles from './styles/mathquiz.module.css';
 
 const MathQuiz = () => {
-  const { state } = useUser();
-  const { user } = state;
+  const { authState } = useAuth();
+  const { walletState } = useWallet();
+  const { user } = authState;
+  const { wallet_balance } = walletState;
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [score, setScore] = useState(0);

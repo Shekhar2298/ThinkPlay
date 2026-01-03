@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { UserProvider, useUser } from './UserContext';
-import Login from './Login';
-import Signup from './Signup';
 import Navbar from './Navbar';
 import AddMoney from './AddMoney';
-import PaymentSuccess from './PaymentSuccess';
 import MathQuiz from './MathQuiz';
 import Footer from './Footer';
 import './App.css';
+import './App.css';
+
+// Lazy load route components
+const Login = lazy(() => import('./Login'));
+const Signup = lazy(() => import('./Signup'));
+const PaymentSuccess = lazy(() => import('./PaymentSuccess'));
 
 function Dashboard() {
   const navigate = useNavigate();
