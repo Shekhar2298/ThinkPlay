@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
 import { useNavigate } from 'react-router-dom';
-import './AddMoney.css';
+import styles from './styles/AddMoney.module.css';
 
 function AddMoney({ onClose }) {
   const { authState, authDispatch } = useAuth();
@@ -118,11 +118,11 @@ function AddMoney({ onClose }) {
   };
 
   return (
-    <div className="add-money-overlay">
-      <div className="add-money-modal">
+    <div className={styles['add-money-overlay']}>
+      <div className={styles['add-money-modal']}>
         <h2>Add Money to Wallet</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="amount">Amount (INR)</label>
             <input
               type="number"
@@ -135,10 +135,10 @@ function AddMoney({ onClose }) {
               required
             />
           </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="button-group">
-            <button type="button" onClick={onClose} className="cancel-btn">Cancel</button>
-            <button type="submit" disabled={loading} className="submit-btn">
+          {error && <div className={styles['error-message']}>{error}</div>}
+          <div className={styles['button-group']}>
+            <button type="button" onClick={onClose} className={styles['cancel-btn']}>Cancel</button>
+            <button type="submit" disabled={loading} className={styles['submit-btn']}>
               {loading ? 'Processing...' : 'Add Money'}
             </button>
           </div>

@@ -1,164 +1,432 @@
+/* Navbar.module.css - Professional Light Green Theme */
+
 .navbar {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  color: #fff;
-  padding: 10px 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  border-radius: 0 0 10px 10px;
-  transform: perspective(1000px) rotateX(0deg);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fff9 50%, #f0fdf4 100%);
+  color: #1e293b;
+  padding: 1.2rem 2.5rem;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1),
+              0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 16px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border-bottom: 3px solid #10b981;
 }
 
+.navbar:hover {
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15),
+              0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section */
 .navbarLeft {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
+/* Math Quiz Logo */
+.navbarLeft::before {
+  /* content: '🧮 Math Quiz'; */
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #065f46;
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0.5rem 1rem;
+  background-color: #f0fdf4;
+  border-radius: 12px;
+  border: 2px solid #d1fae5;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
+  animation: logoFloat 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* Wallet Balance */
 .walletBalance {
-  font-weight: bold;
-  font-size: 18px;
-  color: #fff;
-}
-
-.addMoneyBtn {
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.addMoneyBtn:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
-}
-
-.navbarCenter {
-  flex: 1;
-  text-align: center;
-}
-
-.userGreeting {
-  font-size: 18px;
-  font-weight: 500;
-  color: #1ebe26;
-}
-
-.navbarRight {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #065f46;
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(145deg, #ffffff, #f0fdf4);
+  border-radius: 12px;
+  border: 2px solid #a7f3d0;
   display: flex;
   align-items: center;
-  gap: 20px;
-}
-
-.profileSymbol {
-  font-size: 24px;
-  color: #fff;
-}
-
-.logoutBtn {
-  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
+  gap: 0.5rem;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.08);
+  position: relative;
+  overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.walletBalance::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #34d399, #10b981);
+  opacity: 0.7;
+}
+
+.walletBalance:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+.walletBalance::after {
+  content: 'Wallet';
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #047857;
+  background: #d1fae5;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Add Money Button */
+.addMoneyBtn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   overflow: hidden;
 }
 
-.logoutBtn::before {
+.addMoneyBtn:hover {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.addMoneyBtn:active {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.addMoneyBtn::after {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
 }
 
-.logoutBtn:hover::before {
+.addMoneyBtn:hover::after {
   left: 100%;
 }
 
-.logoutBtn:hover {
-  background: linear-gradient(135deg, #c82333 0%, #c0392b 100%);
-  transform: translateY(-2px) scale(1.05) rotate(-1deg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.addMoneyBtn::before {
+  content: 'Add Money';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #065f46;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease, top 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
 }
 
-/* Mobile */
+.addMoneyBtn:hover::before {
+  opacity: 1;
+  top: -35px;
+}
+
+.addMoneyBtn::before::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #065f46;
+}
+
+/* Right Section */
+.navbarRight {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Profile Symbol */
+.profileSymbol {
+  font-size: 1.8rem;
+  color: #065f46;
+  background: #f0fdf4;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #a7f3d0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
+}
+
+.profileSymbol:hover {
+  background: linear-gradient(135deg, #f0fdf4, #d1fae5);
+  transform: scale(1.1);
+  border-color: #10b981;
+  box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2);
+}
+
+/* Logout Button */
+.logoutBtn {
+  background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+  color: #065f46;
+  border: 2px solid #10b981;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.logoutBtn:hover {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  transform: translateY(-3px) scale(1.1) rotate(10deg);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+  color: #047857;
+}
+
+.logoutBtn:active {
+  transform: translateY(-1px) scale(1.05) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+}
+
+.logoutBtn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.logoutBtn:hover::after {
+  left: 100%;
+}
+
+.logoutBtn::before {
+  content: 'Logout';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #065f46;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease, top 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.logoutBtn:hover::before {
+  opacity: 1;
+  top: -35px;
+}
+
+.logoutBtn::before::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #065f46;
+}
+
+/* Mobile Responsive Design */
 @media (max-width: 768px) {
   .navbar {
-    padding: 10px 15px;
-    gap: 10px;
+    padding: 0.8rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
 
-  .navbarLeft, .navbarCenter, .navbarRight {
-    flex: 1;
-    justify-content: center;
+  .navbarLeft {
+    gap: 0.8rem;
   }
 
-  .walletBalance, .userGreeting {
-    font-size: 16px;
+  .navbarLeft::before {
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
   }
 
-  .addMoneyBtn, .logoutBtn {
-    padding: 8px 12px;
-    font-size: 14px;
+  .walletBalance {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    min-width: 140px;
+  }
+
+  .walletBalance::after {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    top: -8px;
+  }
+
+  .addMoneyBtn,
+  .logoutBtn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.4rem;
+  }
+
+  .profileSymbol {
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+  }
+
+  .navbarRight {
+    gap: 0.8rem;
   }
 }
 
-/* Tablet */
+/* Tablet Responsive Design */
 @media (min-width: 769px) and (max-width: 1024px) {
   .navbar {
-    padding: 20px 30px;
+    padding: 1rem 2rem;
   }
 
-  .navbarLeft, .navbarRight {
-    gap: 25px;
+  .navbarLeft {
+    gap: 1.2rem;
   }
 
-  .walletBalance, .userGreeting {
-    font-size: 20px;
+  .navbarLeft::before {
+    font-size: 1.4rem;
   }
 
-  .addMoneyBtn, .logoutBtn {
-    padding: 12px 18px;
-    font-size: 18px;
+  .walletBalance {
+    font-size: 1.2rem;
+  }
+
+  .addMoneyBtn,
+  .logoutBtn,
+  .profileSymbol {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
   }
 }
 
-/* Desktop */
+/* Desktop Large Screens */
 @media (min-width: 1025px) {
   .navbar {
-    padding: 25px 40px;
+    padding: 1.2rem 3rem;
   }
 
-  .navbarLeft, .navbarRight {
-    gap: 30px;
+  .navbarLeft {
+    gap: 2rem;
   }
 
-  .walletBalance, .userGreeting {
-    font-size: 22px;
+  .navbarLeft::before {
+    font-size: 1.7rem;
+    padding: 0.6rem 1.2rem;
   }
 
-  .addMoneyBtn, .logoutBtn {
-    padding: 14px 20px;
-    font-size: 20px;
+  .walletBalance {
+    font-size: 1.4rem;
+    padding: 0.8rem 1.8rem;
+  }
+
+  .addMoneyBtn,
+  .logoutBtn,
+  .profileSymbol {
+    width: 54px;
+    height: 54px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Accessibility Improvements */
+.addMoneyBtn:focus-visible,
+.logoutBtn:focus-visible,
+.profileSymbol:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+}
+
+/* Loading State */
+.addMoneyBtn:disabled,
+.logoutBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Performance Optimization */
+@media (prefers-reduced-motion: reduce) {
+  .navbar *,
+  .addMoneyBtn,
+  .logoutBtn,
+  .profileSymbol,
+  .walletBalance,
+  .navbarLeft::before {
+    transition: none !important;
+    animation: none !important;
   }
 }

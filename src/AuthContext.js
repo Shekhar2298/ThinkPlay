@@ -35,7 +35,7 @@ function authReducer(state, action) {
     case 'LOGOUT':
       removeCookie('token');
       // Clear refresh token cookie by calling logout endpoint
-      fetch('http://localhost:5000/api/logout', {
+      fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/logout`, {
         method: 'POST',
         credentials: 'include',
       }).catch(err => console.error('Logout error:', err));
@@ -48,7 +48,7 @@ function authReducer(state, action) {
 // Function to refresh access token
 async function refreshAccessToken() {
   try {
-    const response = await fetch('http://localhost:5000/api/refresh', {
+    const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/refresh`, {
       method: 'POST',
       credentials: 'include', // Include cookies
     });
@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
       const token = getCookie('token');
       if (token && !state.user) {
         try {
-          const response = await fetch('http://localhost:5000/api/me', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/me`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -93,7 +93,7 @@ export function AuthProvider({ children }) {
             const newToken = await refreshAccessToken();
             if (newToken) {
               // Retry with new token
-              const retryResponse = await fetch('http://localhost:5000/api/me', {
+              const retryResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/me`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Bearer ${newToken}`,

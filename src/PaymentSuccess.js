@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useUser } from './UserContext';
+import { useAuth } from './AuthContext';
+import { useWallet } from './WalletContext';
+import Footer from './Footer';
 
 function PaymentSuccess() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { dispatch } = useUser();
+  const { authDispatch } = useAuth();
+  const { walletDispatch } = useWallet();
 
   useEffect(() => {
     const orderId = searchParams.get('order_id');
@@ -48,8 +51,8 @@ function PaymentSuccess() {
 
                 if (userResponse.ok) {
                   const userData = await userResponse.json();
-                  dispatch({ type: 'SET_USER', payload: userData.user });
-                  dispatch({ type: 'SET_WALLET_BALANCE', payload: userData.user.wallet_balance });
+                  authDispatch({ type: 'SET_USER', payload: userData.user });
+                  walletDispatch({ type: 'SET_WALLET_BALANCE', payload: userData.user.wallet_balance });
                 }
               } catch (error) {
                 console.error('Error fetching updated user data:', error);
@@ -71,7 +74,7 @@ function PaymentSuccess() {
     } else {
       navigate('/dashboard');
     }
-  }, [searchParams, navigate, dispatch]);
+  }, [searchParams, navigate, authDispatch, walletDispatch]);
 
   return (
     <div className="payment-success">

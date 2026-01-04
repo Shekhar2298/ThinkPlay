@@ -24,7 +24,7 @@ const MathQuiz = () => {
 
   useEffect(() => {
     // Initialize socket connection
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
@@ -169,7 +169,7 @@ const MathQuiz = () => {
             ))}
           </select>
           <p>Wallet Balance: {user ? user.wallet_balance : 0} Rs</p>
-          <button onClick={joinGame}>Join Game</button>
+          <button className={styles.join} onClick={joinGame}>Join Game</button>
         </div>
       ) : waitingForMatch ? (
         <div>

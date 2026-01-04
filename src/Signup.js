@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from './UserContext';
+import { useAuth } from './AuthContext';
+import { useWallet } from './WalletContext';
 import './App.css';
+import styles from './styles/signup.module.css';
+import Footer from './Footer';
 
 function Signup() {
   const navigate = useNavigate();
-  const { dispatch } = useUser();
+  const { authDispatch } = useAuth();
+  const { walletDispatch } = useWallet();
   const [formData, setFormData] = useState({
     mobile: '',
     password: ''
@@ -36,9 +40,9 @@ function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        dispatch({ type: 'SET_USER', payload: data.user });
-        dispatch({ type: 'SET_TOKEN', payload: data.token });
-        dispatch({ type: 'SET_WALLET_BALANCE', payload: data.user.wallet_balance });
+        authDispatch({ type: 'SET_USER', payload: data.user });
+        authDispatch({ type: 'SET_TOKEN', payload: data.token });
+        walletDispatch({ type: 'SET_WALLET_BALANCE', payload: data.user.wallet_balance });
         navigate('/dashboard');
         setFormData({
           mobile: '',
@@ -62,11 +66,11 @@ function Signup() {
 
   return (
     <div className="App">
-      <div className="auth-container">
-        <div className="auth-card">
+      <div className={styles.authContainer}>
+        <div className={styles.authCard}>
           <h2>Sign Up</h2>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="mobile">Mobile</label>
               <input
                 type="tel"
@@ -77,7 +81,7 @@ function Signup() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -88,14 +92,15 @@ function Signup() {
                 required
               />
             </div>
-            <button type="submit" className="submit-btn">Sign Up</button>
+            <button type="submit" className={styles.submitBtn}>Sign Up</button>
           </form>
-          <p className="toggle-text">
+          <p className={styles.toggleText}>
             Already have an account?
-            <Link to="/login" className="toggle-btn">Login</Link>
+            <Link to="/login" className={styles.toggleBtn}>Login</Link>
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

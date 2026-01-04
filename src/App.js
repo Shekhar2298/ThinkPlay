@@ -1,11 +1,13 @@
+import React, { lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { UserProvider, useUser } from './UserContext';
+import { UserProvider } from './UserContext';
+import { useAuth } from './AuthContext';
+import { useWallet } from './WalletContext';
 import Navbar from './Navbar';
 import AddMoney from './AddMoney';
 import MathQuiz from './MathQuiz';
 import Footer from './Footer';
-import './App.css';
-import './App.css';
+import styles from './styles/app.module.css';
 
 // Lazy load route components
 const Login = lazy(() => import('./Login'));
@@ -14,8 +16,10 @@ const PaymentSuccess = lazy(() => import('./PaymentSuccess'));
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { state, dispatch } = useUser();
-  const { user, token, wallet_balance } = state;
+  const { authState, authDispatch } = useAuth();
+  const { walletState } = useWallet();
+  const { user, token } = authState;
+  // const { wallet_balance } = walletState;
   const [showAddMoney, setShowAddMoney] = useState(false);
 
   // Redirect to login if no token
@@ -26,7 +30,7 @@ function Dashboard() {
   }, [token, navigate]);
 
   const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
+    authDispatch({ type: 'LOGOUT' });
     navigate('/login');
   };
 
@@ -43,17 +47,16 @@ function Dashboard() {
   }
 
   return (
-    <div className="App">
-      <Navbar walletBalance={wallet_balance} onLogout={handleLogout} onAddMoney={handleAddMoney} />
+    <div className={styles.App}>
+      <Navbar onLogout={handleLogout} onAddMoney={handleAddMoney} />
       <div className="user-info">
-        <span>HI, {user?.mobile}</span>
+        {/* <span>HI, {user?.mobile}</span> */}
       </div>
       <div className="dashboard">
-      
-        <p>Start your math quiz game here.</p>
         <MathQuiz />
       </div>
       {showAddMoney && <AddMoney onClose={handleCloseAddMoney} />}
+      <Footer />
     </div>
   );
 }
