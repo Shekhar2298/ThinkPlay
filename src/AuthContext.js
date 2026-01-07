@@ -21,7 +21,7 @@ function removeCookie(name) {
 // Initial state for auth
 const initialAuthState = {
   user: null,
-  token: getCookie('token') || null,
+  token: getCookie('accessToken') || null,
 };
 
 // Reducer function for auth
@@ -30,15 +30,21 @@ function authReducer(state, action) {
     case 'SET_USER':
       return { ...state, user: action.payload };
     case 'SET_TOKEN':
-      setCookie('token', action.payload);
+      setCookie('accessToken', action.payload);
       return { ...state, token: action.payload };
     case 'LOGOUT':
-      removeCookie('token');
+      const tokenToSend = state.token;
+      removeCookie('accessToken');
       // Clear refresh token cookie by calling logout endpoint
-      fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      }).catch(err => console.error('Logout error:', err));
+      if (tokenToSend) {
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${tokenToSend}`,
+            'Content-Type': 'application/json',
+          },
+        }).catch(err => console.error('Logout error:', err));
+      }
       return { ...state, user: null, token: null };
     default:
       return state;
@@ -74,7 +80,7 @@ export function AuthProvider({ children }) {
 
   React.useEffect(() => {
     const fetchUserData = async () => {
-      const token = getCookie('token');
+      const token = getCookie('accessToken');
       if (token && !state.user) {
         try {
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/me`, {
@@ -87,8 +93,8 @@ export function AuthProvider({ children }) {
 
           if (response.ok) {
             const data = await response.json();
-            dispatch({ type: 'SET_USER', payload: data.user });
-          } else if (response.status === 401) {
+            dispatch({ type: 'SET_USER', payload: data });
+          } else {
             // Try to refresh token
             const newToken = await refreshAccessToken();
             if (newToken) {
@@ -102,21 +108,20 @@ export function AuthProvider({ children }) {
               });
               if (retryResponse.ok) {
                 const data = await retryResponse.json();
-                dispatch({ type: 'SET_USER', payload: data.user });
+                dispatch({ type: 'SET_USER', payload: data });
               } else {
-                removeCookie('token');
+                removeCookie('accessToken');
                 dispatch({ type: 'LOGOUT' });
               }
+            } else {
+              removeCookie('accessToken');
+              dispatch({ type: 'LOGOUT' });
             }
-          } else {
-            // Token might be invalid, remove it
-            removeCookie('token');
-            dispatch({ type: 'LOGOUT' });
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
           // On error, remove invalid token
-          removeCookie('token');
+          removeCookie('accessToken');
           dispatch({ type: 'LOGOUT' });
         }
       }

@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import { useWallet } from './WalletContext';
-import { validateMobile, validatePassword, sanitizeInput, sanitizeMobile } from './utils/validation';
-import './App.css';
-import styles from './styles/signup.module.css';
+import { useNavigate, Link } from 'react-router-dom';
 import Footer from './Footer';
+import styles from './styles/login.module.css';
+import { sanitizeMobile, sanitizeInput, validateMobile, validatePassword } from './utils/validation';
 
-function Signup() {
+const AdminLogin = () => {
   const navigate = useNavigate();
-  const { authDispatch } = useAuth();
-  const { walletDispatch } = useWallet();
   const [formData, setFormData] = useState({
     mobile: '',
     password: ''
@@ -19,12 +14,6 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [passwordIndicators, setPasswordIndicators] = useState({
-    hasLength: false,
-    hasUpper: false,
-    hasLower: false,
-    hasNumber: false
-  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,15 +30,6 @@ function Signup() {
       ...formData,
       [name]: sanitizedValue
     });
-
-    // Update password indicators in real-time
-    if (name === 'password') {
-      setPasswordIndicators({
-        hasUpper: /[A-Z]/.test(sanitizedValue),
-        hasLower: /[a-z]/.test(sanitizedValue),
-        hasNumber: /\d/.test(sanitizedValue)
-      });
-    }
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -131,12 +111,12 @@ function Signup() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/signup', {
+      const response = await fetch('http://localhost:5000/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for refresh token
+        credentials: 'include', // Include cookies for secure admin session
         body: JSON.stringify({
           mobile: sanitizeMobile(formData.mobile),
           password: formData.password,
@@ -146,10 +126,8 @@ function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        authDispatch({ type: 'SET_USER', payload: data.user });
-        authDispatch({ type: 'SET_TOKEN', payload: data.token });
-        walletDispatch({ type: 'SET_WALLET_BALANCE', payload: data.user.wallet_balance });
-        navigate('/dashboard');
+        // Admin login successful, redirect to admin dashboard
+        navigate('/admin-dashboard');
         // Reset form
         setFormData({ mobile: '', password: '' });
         setErrors({});
@@ -157,7 +135,7 @@ function Signup() {
       } else {
         setErrors({
           ...errors,
-          general: data.error || 'Signup failed. Please try again.'
+          general: data.error || 'Admin login failed. Please check your credentials.'
         });
       }
     } catch (error) {
@@ -170,19 +148,11 @@ function Signup() {
     }
   };
 
-  // Helper function to get cookie value
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  };
-
-
   return (
     <div className="App">
       <div className={styles.authContainer}>
         <div className={styles.authCard}>
-          <h2>Sign Up</h2>
+          <h2>Admin Login</h2>
 
           {errors.general && (
             <div className={styles.errorAlert}>
@@ -192,7 +162,7 @@ function Signup() {
 
           <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
-              <label htmlFor="mobile">Mobile Number</label>
+              <label htmlFor="mobile">Admin Mobile Number</label>
               <input
                 type="tel"
                 id="mobile"
@@ -200,7 +170,7 @@ function Signup() {
                 value={formData.mobile}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
-                placeholder="Enter 10-digit mobile number"
+                placeholder="Enter admin mobile number"
                 maxLength="10"
                 className={errors.mobile && touched.mobile ? styles.inputError : ''}
                 required
@@ -211,7 +181,7 @@ function Signup() {
             </div>
 
             <div className={styles.formGroup}>
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Admin Password</label>
               <input
                 type="password"
                 id="password"
@@ -219,24 +189,10 @@ function Signup() {
                 value={formData.password}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
-                placeholder="Create a strong password"
+                placeholder="Enter admin password"
                 className={errors.password && touched.password ? styles.inputError : ''}
                 required
               />
-              <div className={styles.passwordIndicators}>
-                <div className={`${styles.indicator} ${passwordIndicators.hasLength ? styles.valid : styles.invalid}`}>
-                  Exactly 6 characters
-                </div>
-                <div className={`${styles.indicator} ${passwordIndicators.hasUpper ? styles.valid : styles.invalid}`}>
-                  Uppercase letter
-                </div>
-                <div className={`${styles.indicator} ${passwordIndicators.hasLower ? styles.valid : styles.invalid}`}>
-                  Lowercase letter
-                </div>
-                <div className={`${styles.indicator} ${passwordIndicators.hasNumber ? styles.valid : styles.invalid}`}>
-                  Number
-                </div>
-              </div>
               {errors.password && touched.password && (
                 <span className={styles.errorText}>{errors.password}</span>
               )}
@@ -247,19 +203,18 @@ function Signup() {
               className={styles.submitBtn}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating Account...' : 'Sign Up'}
+              {isSubmitting ? 'Logging in...' : 'Admin Login'}
             </button>
           </form>
 
           <p className={styles.toggleText}>
-            Already have an account?
-            <Link to="/login" className={styles.toggleBtn}>Login</Link>
+            <Link to="/dashboard" className={styles.toggleBtn}>Go to Game</Link>
           </p>
         </div>
       </div>
       <Footer />
     </div>
   );
-}
+};
 
-export default Signup;
+export default AdminLogin;

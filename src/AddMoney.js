@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
 import { useNavigate } from 'react-router-dom';
+import { sanitizeInput, validateAmount } from './utils/validation';
 import styles from './styles/AddMoney.module.css';
 
 function AddMoney({ onClose }) {
@@ -11,12 +12,34 @@ function AddMoney({ onClose }) {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [touched, setTouched] = useState(false);
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(sanitizeInput(value));
+
+    // Clear error when user starts typing
+    if (error) {
+      setError('');
+    }
+  };
+
+  const handleAmountBlur = () => {
+    setTouched(true);
+    const validationError = validateAmount(amount);
+    if (validationError) {
+      setError(validationError);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!amount || amount < 1) {
-      setError('Minimum amount is 1 INR');
+    // Validate amount
+    const validationError = validateAmount(amount);
+    if (validationError) {
+      setError(validationError);
+      setTouched(true);
       return;
     }
 
@@ -27,9 +50,9 @@ function AddMoney({ onClose }) {
       const res = await fetch("http://localhost:5000/api/razorpay/create-order", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json"
         },
+        credentials: 'include', // Include cookies in request
         body: JSON.stringify({ amount })
       });
 
@@ -102,8 +125,8 @@ function AddMoney({ onClose }) {
 
           if (userResponse.ok) {
             const userData = await userResponse.json();
-            authDispatch({ type: 'SET_USER', payload: userData.user });
-            walletDispatch({ type: 'SET_WALLET_BALANCE', payload: userData.user.wallet_balance });
+            authDispatch({ type: 'SET_USER', payload: userData });
+            walletDispatch({ type: 'SET_WALLET_BALANCE', payload: userData.wallet_balance });
           }
         } catch (error) {
           console.error('Error fetching updated user data:', error);

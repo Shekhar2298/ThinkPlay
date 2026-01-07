@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
+import { sanitizeMobile, sanitizeInput, validateMobile, validatePassword } from './utils/validation';
 import './App.css';
 import styles from './styles/login.module.css';
 import Footer from './Footer';
@@ -15,15 +16,105 @@ function Login() {
     password: ''
   });
 
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Sanitize input based on field type
+    let sanitizedValue = value;
+    if (name === 'mobile') {
+      sanitizedValue = sanitizeMobile(value);
+    } else {
+      sanitizedValue = sanitizeInput(value);
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: sanitizedValue
     });
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: null
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouched({
+      ...touched,
+      [name]: true
+    });
+
+    // Validate field on blur
+    validateField(name, formData[name]);
+  };
+
+  const validateField = (fieldName, value) => {
+    let error = null;
+
+    switch (fieldName) {
+      case 'mobile':
+        error = validateMobile(value);
+        break;
+      case 'password':
+        error = validatePassword(value);
+        break;
+      default:
+        break;
+    }
+
+    setErrors({
+      ...errors,
+      [fieldName]: error
+    });
+
+    return !error;
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Validate all fields
+    const mobileError = validateMobile(formData.mobile);
+    const passwordError = validatePassword(formData.password);
+
+    if (mobileError) {
+      newErrors.mobile = mobileError;
+      isValid = false;
+    }
+
+    if (passwordError) {
+      newErrors.password = passwordError;
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    setTouched({ mobile: true, password: true });
+
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear any previous general errors
+    setErrors({ ...errors, general: null });
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -32,7 +123,7 @@ function Login() {
         },
         credentials: 'include', // Include cookies for refresh token
         body: JSON.stringify({
-          mobile: formData.mobile,
+          mobile: sanitizeMobile(formData.mobile),
           password: formData.password,
         }),
       });
@@ -44,15 +135,23 @@ function Login() {
         authDispatch({ type: 'SET_TOKEN', payload: data.accessToken });
         walletDispatch({ type: 'SET_WALLET_BALANCE', payload: data.user.wallet_balance });
         navigate('/dashboard');
-        setFormData({
-          mobile: '',
-          password: ''
-        });
+        // Reset form
+        setFormData({ mobile: '', password: '' });
+        setErrors({});
+        setTouched({});
       } else {
-        alert(data.error || 'Login failed');
+        setErrors({
+          ...errors,
+          general: data.error || 'Login failed. Please check your credentials.'
+        });
       }
     } catch (error) {
-      alert('Network error: ' + error.message);
+      setErrors({
+        ...errors,
+        general: 'Network error. Please check your connection and try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -61,18 +160,33 @@ function Login() {
       <div className={styles.authContainer}>
         <div className={styles.authCard}>
           <h2>Login</h2>
+
+          {errors.general && (
+            <div className={styles.errorAlert}>
+              {errors.general}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
-              <label htmlFor="mobile">Mobile</label>
+              <label htmlFor="mobile">Mobile Number</label>
               <input
                 type="tel"
                 id="mobile"
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
+                placeholder="Enter 10-digit mobile number"
+                maxLength="10"
+                className={errors.mobile && touched.mobile ? styles.inputError : ''}
                 required
               />
+              {errors.mobile && touched.mobile && (
+                <span className={styles.errorText}>{errors.mobile}</span>
+              )}
             </div>
+
             <div className={styles.formGroup}>
               <label htmlFor="password">Password</label>
               <input
@@ -81,11 +195,25 @@ function Login() {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
+                placeholder="Enter your password"
+                className={errors.password && touched.password ? styles.inputError : ''}
                 required
               />
+              {errors.password && touched.password && (
+                <span className={styles.errorText}>{errors.password}</span>
+              )}
             </div>
-            <button type="submit" className={styles.submitBtn}>Login</button>
+
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Logging in...' : 'Login'}
+            </button>
           </form>
+
           <p className={styles.toggleText}>
             Don't have an account?
             <Link to="/signup" className={styles.toggleBtn}>Sign Up</Link>

@@ -8,7 +8,8 @@ import AddMoney from './AddMoney';
 import MathQuiz from './MathQuiz';
 import Footer from './Footer';
 import styles from './styles/app.module.css';
-
+import AdminLogin from './AdminLogin';
+import AdminDashboard from './AdminDashboard';
 // Lazy load route components
 const Login = lazy(() => import('./Login'));
 const Signup = lazy(() => import('./Signup'));
@@ -65,13 +66,16 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <Routes>
+      <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/adm-lg" element={<AdminLogin />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/" element={<Login />} />
         </Routes>
+
       </Router>
     </UserProvider>
   );

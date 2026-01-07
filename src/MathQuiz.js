@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
+import { validateAnswer, validateEntryFee } from './utils/validation';
 import io from 'socket.io-client';
 import styles from './styles/mathquiz.module.css';
 
@@ -147,10 +148,14 @@ const MathQuiz = () => {
       alert('Please login first');
       return;
     }
-    if (user.wallet_balance < entryFee) {
-      alert('Insufficient wallet balance');
+
+    // Validate entry fee against wallet balance
+    const validationError = validateEntryFee(entryFee, user.wallet_balance);
+    if (validationError) {
+      alert(validationError);
       return;
     }
+
     setWaitingForMatch(true);
     socket.emit('joinGame', { userId: user.id, entryFee });
   };
