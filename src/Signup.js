@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
@@ -12,9 +12,9 @@ function Signup() {
   const { authDispatch } = useAuth();
   const { walletDispatch } = useWallet();
   const [formData, setFormData] = useState({
-    mobile: '',
-    password: ''
+    mobile: ''
   });
+  const passwordRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -139,7 +139,7 @@ function Signup() {
         credentials: 'include', // Include cookies for refresh token
         body: JSON.stringify({
           mobile: sanitizeMobile(formData.mobile),
-          password: formData.password,
+          password: passwordRef.current.value,
         }),
       });
 
@@ -216,11 +216,12 @@ function Signup() {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
+                ref={passwordRef}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 placeholder="Create a strong password"
                 className={errors.password && touched.password ? styles.inputError : ''}
+                autoComplete="new-password"
                 required
               />
               <div className={styles.passwordIndicators}>

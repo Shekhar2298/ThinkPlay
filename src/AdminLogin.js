@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Footer from './Footer';
 import styles from './styles/login.module.css';
@@ -10,6 +10,7 @@ const AdminLogin = () => {
     mobile: '',
     password: ''
   });
+  const passwordRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -22,14 +23,23 @@ const AdminLogin = () => {
     let sanitizedValue = value;
     if (name === 'mobile') {
       sanitizedValue = sanitizeMobile(value);
+    } else if (name === 'password') {
+      sanitizedValue = sanitizeInput(value);
+      // Store password in formData for validation
+      setFormData({
+        ...formData,
+        password: sanitizedValue
+      });
     } else {
       sanitizedValue = sanitizeInput(value);
     }
 
-    setFormData({
-      ...formData,
-      [name]: sanitizedValue
-    });
+    if (name === 'mobile') {
+      setFormData({
+        ...formData,
+        [name]: sanitizedValue
+      });
+    }
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -119,7 +129,7 @@ const AdminLogin = () => {
         credentials: 'include', // Include cookies for secure admin session
         body: JSON.stringify({
           mobile: sanitizeMobile(formData.mobile),
-          password: formData.password,
+          password: passwordRef.current.value,
         }),
       });
 
@@ -186,11 +196,12 @@ const AdminLogin = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
+                ref={passwordRef}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 placeholder="Enter admin password"
                 className={errors.password && touched.password ? styles.inputError : ''}
+                autocomplete="current-password"
                 required
               />
               {errors.password && touched.password && (

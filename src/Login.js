@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useWallet } from './WalletContext';
@@ -12,9 +12,9 @@ function Login() {
   const { authDispatch } = useAuth();
   const { walletDispatch } = useWallet();
   const [formData, setFormData] = useState({
-    mobile: '',
-    password: ''
+    mobile: ''
   });
+  const passwordRef = useRef(null);
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -27,14 +27,23 @@ function Login() {
     let sanitizedValue = value;
     if (name === 'mobile') {
       sanitizedValue = sanitizeMobile(value);
+    } else if (name === 'password') {
+      sanitizedValue = sanitizeInput(value);
+      // Store password in formData for validation
+      setFormData({
+        ...formData,
+        password: sanitizedValue
+      });
     } else {
       sanitizedValue = sanitizeInput(value);
     }
 
-    setFormData({
-      ...formData,
-      [name]: sanitizedValue
-    });
+    if (name === 'mobile') {
+      setFormData({
+        ...formData,
+        [name]: sanitizedValue
+      });
+    }
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -124,7 +133,7 @@ function Login() {
         credentials: 'include', // Include cookies for refresh token
         body: JSON.stringify({
           mobile: sanitizeMobile(formData.mobile),
-          password: formData.password,
+          password: passwordRef.current.value,
         }),
       });
 
@@ -193,11 +202,12 @@ function Login() {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
+                ref={passwordRef}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 placeholder="Enter your password"
                 className={errors.password && touched.password ? styles.inputError : ''}
+                autoComplete="current-password"
                 required
               />
               {errors.password && touched.password && (
